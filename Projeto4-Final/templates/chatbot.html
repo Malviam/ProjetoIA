@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat com IA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <h1>Chat com a IA</h1>
+    </header>
+
+    <main id="chat-box" class="chat-box">
+      <!-- Mensagens do chat serão inseridas dinamicamente aqui -->
+    </main>
+
+    <footer>
+      <input type="text" id="user-input" placeholder="Digite sua mensagem..." autocomplete="off">
+      <button id="send-btn">Enviar</button>
+      <button id="next-screen" onclick="location.href='/generator'">Ir para Gerar Perguntas</button>
+    </footer>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
