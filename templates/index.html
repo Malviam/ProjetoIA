@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coelho Sabido</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e5ddd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #ece5dd;
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group {
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #075e54;
+            color: white;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        button:hover {
+            background-color: #128c7e;
+        }
+        .message {
+            margin: 5px 0;
+            display: flex;
+            max-width: 70%;
+        }
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            border-radius: 7.5px 7.5px 0 7.5px;
+            padding: 8px 12px;
+            margin-right: 10px;
+            word-wrap: break-word;
+        }
+        .ia-message {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-radius: 7.5px 7.5px 7.5px 0;
+            padding: 8px 12px;
+            margin-left: 10px;
+            word-wrap: break-word;
+        }
+        .perguntas-box {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-box" >
+            <p id="output"></p>
+            <!-- Respostas do chat serão exibidas aqui -->
+        </div>
+        <div class="input-group">
+            <input type="text" id="pergunta" placeholder="Digite sua pergunta...">
+            <button onclick="enviarMensagem()">Enviar</button>
+        </div>
+        <div class="perguntas-box" id="perguntas-output">
+            <!-- Perguntas geradas serão exibidas aqui -->
+        </div>
+    </div>
+    <script>
+        function enviarMensagem() {
+            const pergunta = document.getElementById("pergunta").value;
+            fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({message:pergunta})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const output = document.getElementById("output");
+                output.innerHTML += `<div class="message user-message"><strong>Você:</strong> ${pergunta}</div>`;
+                output.innerHTML += `<div class="message ia-message"><strong>IA:</strong> ${data.message}</div>`;
+                document.getElementById("pergunta").value = "";  // Limpa a entrada de texto
+                output.scrollTop = output.scrollHeight;  // Rola para o final da caixa de chat
+            });
+        }
+ 
+    </script>
+</body>
+</html>
