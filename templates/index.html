@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coelho Sabido</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Prof.Interativo</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -13,19 +12,42 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
         .container {
+            display: flex;
+            flex-direction: row;
+            width: 90%;
+            max-width: 1200px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-            height: 80vh;
+            overflow: hidden;
+        }
+        .chat-container {
+            flex: 3;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            padding: 20px;
+        }
+        .instructions-container {
+            flex: 1;
+            background-color: #f7f7f7;
+            border-left: 1px solid #ccc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .instructions-container h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .instructions-container p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
         .chat-box {
             flex: 1;
@@ -34,6 +56,8 @@
             background-color: #ece5dd;
             display: flex;
             flex-direction: column;
+            margin-top: 20px;
+            border-radius: 8px;
         }
         .input-group {
             display: flex;
@@ -80,28 +104,39 @@
             padding: 8px 12px;
             margin-left: 10px;
             word-wrap: break-word;
+            display: flex;
+            flex-direction: column;
         }
-        .perguntas-box {
-            padding: 10px;
-            border-top: 1px solid #ccc;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: #f0f0f0;
+        h1 {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="chat-box" >
-            <p id="output"></p>
-            <!-- Respostas do chat serão exibidas aqui -->
+        <!-- Área do Chat -->
+        <div class="chat-container">
+            <h1>Bem-vindo a Prof.Laura</h1>
+            <div class="chat-box">
+                <p id="output"></p>
+                <!-- Respostas do chat serão exibidas aqui -->
+            </div>
+            <div class="input-group">
+                <input type="text" id="pergunta" placeholder="Digite sua pergunta...">
+                <button onclick="enviarMensagem()">Enviar</button>
+            </div>
         </div>
-        <div class="input-group">
-            <input type="text" id="pergunta" placeholder="Digite sua pergunta...">
-            <button onclick="enviarMensagem()">Enviar</button>
-        </div>
-        <div class="perguntas-box" id="perguntas-output">
-            <!-- Perguntas geradas serão exibidas aqui -->
+
+        <!-- Área de Instruções -->
+        <div class="instructions-container">
+            <h2>Instruções</h2>
+            <img src="https://cdn.pixabay.com/animation/2022/11/13/07/16/07-16-26-181_512.gif" alt="GIF animado" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+            <p>1. Digite sua pergunta na caixa de entrada localizada na parte inferior.</p>
+            <p>2. Clique no botão "Enviar" para enviar sua pergunta.</p>
+            <p>3. As respostas do chatbot aparecerão na área principal do chat.</p>
+            <p>4. Utilize perguntas objetivas para obter melhores respostas.</p>
         </div>
     </div>
     <script>
@@ -110,19 +145,19 @@
             fetch('/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({message:pergunta})
+                body: JSON.stringify({ message: pergunta })
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 const output = document.getElementById("output");
-                output.innerHTML += `<div class="message user-message"><strong>Você:</strong> ${pergunta}</div>`;
-                output.innerHTML += `<div class="message ia-message"><strong>IA:</strong> ${data.message}</div>`;
+                const splitMessage = data.message.split('\n').filter((str) => str.length > 3);
+
+                output.innerHTML += `<div class="message user-message"><strong>Você:</strong><br>${pergunta}</div>`;
+                output.innerHTML += `<div class="message ia-message"><strong>Prof.Laura:</strong><br>${splitMessage.map((str) => `<p>${str}</p>`).toString().replaceAll(',', '')}</div>`;
                 document.getElementById("pergunta").value = "";  // Limpa a entrada de texto
                 output.scrollTop = output.scrollHeight;  // Rola para o final da caixa de chat
             });
         }
- 
     </script>
 </body>
 </html>
