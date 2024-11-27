@@ -9,3 +9,9 @@ https://youtu.be/qtKmmPKfJXY
 
 # 3ª Entrega - Produto Final (Vídeo C3):
 https://youtu.be/BZbR04rGnuM
+
+
+Para rodar o programa , precisa ser instalado o requirements.txt
+baixe todo o projeto e rode no terminal
+
+pip install -r requirements.txt
